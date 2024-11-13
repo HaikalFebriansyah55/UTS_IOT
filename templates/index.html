@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <h1>Sensor Data (Real-time)</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Temperature</th>
+                <th>Humidity</th>
+                <th>LDR</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+        </tbody>
+    </table>
+
+    <script>
+      const socket = io();
+  
+      socket.on("connect", function() {
+          console.log("Connected to SocketIO server");
+      });
+  
+      socket.on("new_data", function(data) {
+          console.log("Received new data:", data);  // Debug log
+          const table = document.getElementById("data-table");
+          const row = document.createElement("tr");
+  
+          row.innerHTML = `
+              <td>${data.temperature} °C</td>
+              <td>${data.humidity} %</td>
+              <td>${data.ldr}</td>
+              <td>${new Date(data.timestamp).toLocaleString()}</td>
+          `;
+  
+          table.insertBefore(row, table.firstChild);
+      });
+  </script>
+  
+</body>
+</html>
